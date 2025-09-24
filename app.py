@@ -75,151 +75,99 @@ page = st.sidebar.radio("Pilih Halaman:", ["Dashboard", "Upload & Prediksi", "Da
 # Dashboard
 # ================================
 if page == "Dashboard":
-    # Header
+    # CSS Styling agar tampilan seperti web modern
     st.markdown(
         """
-        <div style="
-            text-align:center; 
-            padding:40px; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius:20px; 
-            color:white;
-            box-shadow:0 8px 20px rgba(0,0,0,0.3);">
-            <h1 style="margin:0;">🏠 Dashboard Informasi</h1>
-            <h2 style="margin-top:10px;">📊 Klasifikasi Penerima Bantuan Sosial</h2>
-            <p style="margin-top:10px; font-size:18px; opacity:0.9;">
-                Desa Cikembar • Sistem Pendukung Keputusan
-            </p>
-        </div>
-        """, unsafe_allow_html=True
+        <style>
+        .title {
+            text-align: center;
+            color: #4facfe;
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #bbbbbb;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: #1e1e2f;
+            padding: 28px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+            color: #eaeaea;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        .card h2 {
+            color: #4facfe;
+            margin-bottom: 12px;
+            font-size: 22px;
+        }
+        .bullet {
+            margin: 6px 0;
+            padding-left: 5px;
+        }
+        .bullet::before {
+            content: "▸ ";
+            color: #4facfe;
+            font-weight: bold;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
     )
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    # Judul Dashboard
+    st.markdown("<div class='title'>🏠 Dashboard Informasi</div>", unsafe_allow_html=True)
+    st.markdown("<div class='subtitle'>Klasifikasi Penerima Bantuan Sosial di Desa Cikembar</div>", unsafe_allow_html=True)
 
-    # Card Keterangan & Tujuan
+    # Tentang Sistem
     st.markdown(
         """
-        <div style="
-            padding:30px; 
-            background: rgba(255,255,255,0.05); 
-            backdrop-filter: blur(12px);
-            border-radius:18px; 
-            color:#EAEAEA; 
-            box-shadow:0 6px 15px rgba(0,0,0,0.25); 
-            line-height:1.6;
-            font-size:16px;">
-        
-            <div style="margin-bottom:25px;">
-                <h2 style="color:#4facfe; margin-bottom:10px;">📌 Tentang Sistem</h2>
-                <p>
-                    Sistem ini menggunakan <span style="color:#4facfe; font-weight:bold;">Naive Bayes</span> 
-                    untuk menentukan apakah warga desa 
-                    <span style="color:#00e676; font-weight:bold;">✅ Layak</span> atau 
-                    <span style="color:#ff5252; font-weight:bold;">❌ Tidak Layak</span> 
-                    menerima bantuan sosial.
-                </p>
-            </div>
-
-            <div style="margin-bottom:25px;">
-                <h2 style="color:#4facfe; margin-bottom:10px;">🎯 Tujuan</h2>
-                <div style="padding-left:10px;">
-                    ▸ Menjadi <b>alat bantu keputusan</b> perangkat desa agar penyaluran tepat sasaran.<br>
-                    ▸ Meningkatkan <b>efisiensi & transparansi</b> dalam proses seleksi penerima.<br>
-                    ▸ Mengurangi <b>subjektivitas</b> serta potensi ketidakadilan.<br>
-                    ▸ Memanfaatkan <b>data objektif</b> untuk klasifikasi yang akurat.
-                </div>
-            </div>
-
-            <div>
-                <h2 style="color:#4facfe; margin-bottom:10px;">ℹ️ Keterangan</h2>
-                <p>
-                    Data yang dipakai dalam sistem ini mencakup <b>usia kepala keluarga</b>, 
-                    <b>jumlah anggota keluarga</b>, <b>pendapatan bulanan</b>, serta <b>kepemilikan rumah</b>.  
-                    Dengan fitur tersebut, sistem dapat membantu perangkat desa membuat keputusan 
-                    yang <b>lebih adil, cepat, dan berbasis data</b>.
-                </p>
-            </div>
-
+        <div class="card">
+            <h2>📌 Tentang Sistem</h2>
+            Sistem ini menggunakan <b style="color:#4facfe;">Naive Bayes</b> 
+            untuk menentukan apakah warga desa 
+            <span style="color:#00e676; font-weight:bold;">✅ Layak</span> atau 
+            <span style="color:#ff5252; font-weight:bold;">❌ Tidak Layak</span> 
+            menerima bantuan sosial.
         </div>
-        """, unsafe_allow_html=True
+        """,
+        unsafe_allow_html=True
     )
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # Bagian Fitur (dengan Glass Card)
-    st.markdown("### 🔎 Fitur Utama:")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.markdown(
-            """
-            <div style="
-                padding:20px; 
-                background: rgba(255,255,255,0.08); 
-                backdrop-filter: blur(8px);
-                border-radius:12px; 
-                box-shadow:0 4px 10px rgba(0,0,0,0.3); 
-                margin-bottom:15px;">
-                👤 <b>Usia Kepala Keluarga</b>
-            </div>
-            """, unsafe_allow_html=True
-        )
-        st.markdown(
-            """
-            <div style="
-                padding:20px; 
-                background: rgba(255,255,255,0.08); 
-                backdrop-filter: blur(8px);
-                border-radius:12px; 
-                box-shadow:0 4px 10px rgba(0,0,0,0.3); 
-                margin-bottom:15px;">
-                💰 <b>Pendapatan Bulanan</b>
-            </div>
-            """, unsafe_allow_html=True
-        )
-
-    with col2:
-        st.markdown(
-            """
-            <div style="
-                padding:20px; 
-                background: rgba(255,255,255,0.08); 
-                backdrop-filter: blur(8px);
-                border-radius:12px; 
-                box-shadow:0 4px 10px rgba(0,0,0,0.3); 
-                margin-bottom:15px;">
-                👨‍👩‍👧‍👦 <b>Jumlah Anggota Keluarga</b>
-            </div>
-            """, unsafe_allow_html=True
-        )
-        st.markdown(
-            """
-            <div style="
-                padding:20px; 
-                background: rgba(255,255,255,0.08); 
-                backdrop-filter: blur(8px);
-                border-radius:12px; 
-                box-shadow:0 4px 10px rgba(0,0,0,0.3); 
-                margin-bottom:15px;">
-                🏡 <b>Kepemilikan Rumah</b>
-            </div>
-            """, unsafe_allow_html=True
-        )
-
-    # Footer
-    st.markdown("<br>", unsafe_allow_html=True)
+    # Tujuan
     st.markdown(
         """
-        <div style="
-            text-align:center; 
-            padding:15px; 
-            font-size:15px; 
-            color:#aaa;">
-            🚀 Dibangun untuk mendukung <b>keputusan berbasis data</b> di Desa Cikembar
+        <div class="card">
+            <h2>🎯 Tujuan</h2>
+            <div class="bullet">Menjadi <b>alat bantu keputusan</b> perangkat desa agar penyaluran tepat sasaran.</div>
+            <div class="bullet">Meningkatkan <b>efisiensi & transparansi</b> dalam proses seleksi penerima.</div>
+            <div class="bullet">Mengurangi <b>subjektivitas</b> serta potensi ketidakadilan.</div>
+            <div class="bullet">Memanfaatkan <b>data objektif</b> untuk klasifikasi yang akurat.</div>
         </div>
-        """, unsafe_allow_html=True
+        """,
+        unsafe_allow_html=True
     )
+
+    # Keterangan
+    st.markdown(
+        """
+        <div class="card">
+            <h2>ℹ️ Keterangan</h2>
+            Data yang dipakai dalam sistem ini mencakup: <b>usia kepala keluarga</b>, 
+            <b>jumlah anggota keluarga</b>, <b>pendapatan bulanan</b>, serta <b>kepemilikan rumah</b>.  
+            Dengan fitur tersebut, sistem dapat membantu perangkat desa membuat keputusan 
+            yang <b>lebih adil, cepat, dan berbasis data</b>.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
 # ================================
 # Upload & Prediksi
