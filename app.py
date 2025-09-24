@@ -2,14 +2,14 @@ import streamlit as st
 import pandas as pd
 import joblib
 import os
+import io
 from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import LabelEncoder
-import io
 
 st.set_page_config(page_title="Klasifikasi Bantuan Sosial", layout="wide")
 
 # ================================
-# Fungsi training model
+# Fungsi Training Model
 # ================================
 def train_model(df):
     le_rumah = LabelEncoder()
@@ -25,7 +25,6 @@ def train_model(df):
     model = GaussianNB()
     model.fit(X, y)
 
-    # Simpan model & encoder
     joblib.dump(model, "model_bansos.pkl")
     joblib.dump(le_rumah, "encoder_rumah.pkl")
     joblib.dump(le_target, "encoder_target.pkl")
@@ -33,7 +32,7 @@ def train_model(df):
     return model, le_rumah, le_target
 
 # ================================
-# Fungsi alasan bansos
+# Fungsi Alasan Bansos
 # ================================
 def alasan_bansos_row(row):
     if row["Keterangan_Layak"] == "Layak":
@@ -60,35 +59,77 @@ def alasan_bansos_row(row):
         return ", ".join(alasan) + " → Tidak Layak menerima bansos."
 
 # ================================
-# UI Streamlit
+# Sidebar Navigasi
 # ================================
-st.title("📊 Prediksi Penerima Bantuan Sosial (Naive Bayes)")
+st.sidebar.title("Navigasi")
+page = st.sidebar.radio("Pilih Halaman:", ["🏠 Dashboard", "📤 Upload & Training", "🔮 Prediksi Penerima Bansos"])
 
-uploaded_file = st.file_uploader("📁 Upload dataset penduduk (Excel/CSV)", type=["csv", "xlsx"])
-if uploaded_file:
-    # Baca dataset
-    if uploaded_file.name.endswith("csv"):
-        df = pd.read_csv(uploaded_file)
-    else:
-        df = pd.read_excel(uploaded_file)
+# ================================
+# Halaman 1: Dashboard
+# ================================
+if page == "🏠 Dashboard":
+    st.markdown("<h1 style='text-align:center;color:#4facfe;'>📊 Sistem Klasifikasi Bantuan Sosial</h1>", unsafe_allow_html=True)
+    st.markdown("---")
 
-    st.success("✅ Dataset berhasil diupload")
-    st.dataframe(df.head())
+    st.subheader("📌 Tentang Sistem")
+    st.write("""
+    Sistem ini menggunakan **Naive Bayes Classifier** untuk membantu perangkat desa menentukan
+    apakah seorang warga **Layak** atau **Tidak Layak** menerima bantuan sosial berdasarkan:
+    - Usia Kepala Keluarga  
+    - Pendapatan Bulanan  
+    - Jumlah Anggota Keluarga  
+    - Kepemilikan Rumah  
+    """)
 
-    # MODE TRAINING
-    if "Status_Kesejahteraan" in df.columns:
-        st.info("🔄 Dataset berisi label → model akan dilatih ulang.")
-        model, le_rumah, le_target = train_model(df)
-        st.success("✅ Model berhasil dilatih dan disimpan!")
-        st.stop()
+    st.subheader("🎯 Tujuan")
+    st.write("""
+    - Membantu perangkat desa menyalurkan bansos tepat sasaran  
+    - Mengurangi subjektivitas & meningkatkan transparansi  
+    - Memanfaatkan data untuk keputusan yang lebih adil  
+    """)
 
-    # MODE PREDIKSI
-    else:
-        # Pastikan model sudah ada
+# ================================
+# Halaman 2: Upload & Training
+# ================================
+elif page == "📤 Upload & Training":
+    st.title("📤 Upload Dataset dengan Label (Training Model)")
+
+    uploaded_file = st.file_uploader("Upload dataset (Excel/CSV) dengan kolom `Status_Kesejahteraan`", type=["csv", "xlsx"])
+    if uploaded_file:
+        if uploaded_file.name.endswith("csv"):
+            df = pd.read_csv(uploaded_file)
+        else:
+            df = pd.read_excel(uploaded_file)
+
+        st.success("✅ Dataset berhasil diupload")
+        st.dataframe(df.head())
+
+        if "Status_Kesejahteraan" not in df.columns:
+            st.error("Dataset tidak memiliki kolom `Status_Kesejahteraan`. Tidak bisa training.")
+        else:
+            model, le_rumah, le_target = train_model(df)
+            st.success("✅ Model berhasil dilatih dan disimpan sebagai `model_bansos.pkl`")
+
+# ================================
+# Halaman 3: Prediksi Penerima
+# ================================
+elif page == "🔮 Prediksi Penerima Bansos":
+    st.title("🔮 Prediksi Penerima Bantuan Sosial")
+
+    uploaded_file = st.file_uploader("Upload dataset tanpa label (Excel/CSV)", type=["csv", "xlsx"])
+    if uploaded_file:
+        if uploaded_file.name.endswith("csv"):
+            df = pd.read_csv(uploaded_file)
+        else:
+            df = pd.read_excel(uploaded_file)
+
+        st.success("✅ Dataset berhasil diupload")
+        st.dataframe(df.head())
+
         if not (os.path.exists("model_bansos.pkl") and 
                 os.path.exists("encoder_rumah.pkl") and 
                 os.path.exists("encoder_target.pkl")):
-            st.error("❌ Belum ada model tersimpan. Upload dataset dengan label terlebih dahulu untuk melatih model.")
+            st.error("❌ Belum ada model tersimpan. Silakan latih model terlebih dahulu di halaman 'Upload & Training'.")
             st.stop()
 
         # Load model
@@ -103,16 +144,13 @@ if uploaded_file:
             st.error(f"Dataset tidak sesuai. Kolom hilang: {missing}")
             st.stop()
 
-        # Transformasi
         df["Kepemilikan_Rumah_encoded"] = le_rumah.transform(df["Kepemilikan_Rumah"])
         X_all = df[["Usia_Kepala_Keluarga", "Pendapatan_Bulanan",
                     "Jumlah_Anggota_Keluarga", "Kepemilikan_Rumah_encoded"]]
 
-        # Prediksi
         y_pred = model.predict(X_all)
         df["Prediksi_Status"] = le_target.inverse_transform(y_pred)
 
-        # Mapping status → layak/tidak layak
         mapping = {
             "Miskin": "Layak",
             "Rentan Miskin": "Layak",
@@ -122,11 +160,9 @@ if uploaded_file:
         df["Keterangan_Layak"] = df["Prediksi_Status"].map(mapping)
         df["Keterangan_Alasan"] = df.apply(alasan_bansos_row, axis=1)
 
-        # Tampilkan hasil
         st.subheader("📋 Hasil Prediksi")
         st.dataframe(df[["Nama", "Prediksi_Status", "Keterangan_Layak", "Keterangan_Alasan"]])
 
-        # Download
         buffer = io.BytesIO()
         df.to_excel(buffer, index=False, engine="openpyxl")
         buffer.seek(0)
