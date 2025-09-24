@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import joblib
-import os
 import io
 from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import LabelEncoder
@@ -37,11 +36,6 @@ def train_model(df):
 
     model = GaussianNB()
     model.fit(X, y)
-
-    # Simpan model
-    joblib.dump(model, "model_bansos.pkl")
-    joblib.dump(le_rumah, "encoder_rumah.pkl")
-    joblib.dump(le_target, "encoder_target.pkl")
 
     return model, le_rumah, le_target
 
@@ -115,8 +109,8 @@ elif page == "🔮 Prediksi Kelayakan":
         st.success("✅ Dataset berhasil diupload")
         st.dataframe(df.head())
 
+        # Train model & prediksi
         model, le_rumah, le_target = train_model(df)
-
         df["Kepemilikan_Rumah_encoded"] = le_rumah.transform(df["Kepemilikan_Rumah"])
         X_all = df[["Usia_Kepala_Keluarga", "Pendapatan_Bulanan",
                     "Jumlah_Anggota_Keluarga", "Kepemilikan_Rumah_encoded"]]
@@ -124,6 +118,9 @@ elif page == "🔮 Prediksi Kelayakan":
         y_pred = model.predict(X_all)
         df["Status_Kelayakan"] = le_target.inverse_transform(y_pred)
         df["Alasan"] = df.apply(alasan_bansos_row, axis=1)
+
+        # Simpan hasil ke session_state
+        st.session_state["hasil_prediksi"] = df
 
         st.subheader("📋 Hasil Prediksi")
         st.dataframe(df[["Nama", "Status_Kelayakan", "Alasan"]])
@@ -141,31 +138,15 @@ elif page == "🔮 Prediksi Kelayakan":
 elif page == "📊 Prioritas Penerima":
     st.title("📊 Urutan Prioritas Penerima Bansos")
 
-    uploaded_file = st.file_uploader("Upload dataset penduduk (Excel/CSV)", type=["csv", "xlsx"], key="prioritas")
-    if uploaded_file:
-        if uploaded_file.name.endswith("csv"):
-            df = pd.read_csv(uploaded_file)
-        else:
-            df = pd.read_excel(uploaded_file)
+    if "hasil_prediksi" not in st.session_state:
+        st.warning("⚠️ Belum ada hasil prediksi. Silakan lakukan prediksi terlebih dahulu di halaman **Prediksi Kelayakan**.")
+    else:
+        df = st.session_state["hasil_prediksi"]
 
-        st.success("✅ Dataset berhasil diupload")
-        st.dataframe(df.head())
+        # Filter hanya penerima layak
+        penerima = df[df["Status_Kelayakan"] == "Layak"].copy()
 
-        # Training lagi (bisa dioptimalkan pakai model simpanan)
-        model, le_rumah, le_target = train_model(df)
-
-        df["Kepemilikan_Rumah_encoded"] = le_rumah.transform(df["Kepemilikan_Rumah"])
-        X_all = df[["Usia_Kepala_Keluarga", "Pendapatan_Bulanan",
-                    "Jumlah_Anggota_Keluarga", "Kepemilikan_Rumah_encoded"]]
-
-        y_pred = model.predict(X_all)
-        df["Status_Kelayakan"] = le_target.inverse_transform(y_pred)
-        df["Alasan"] = df.apply(alasan_bansos_row, axis=1)
-
-        # Ambil hanya yang layak
-        penerima = df[df["Status_Kelayakan"] == "Layak"]
-
-        # Urutkan dari yang paling membutuhkan
+        # Urutkan prioritas (pendapatan rendah, keluarga besar, usia tua)
         penerima = penerima.sort_values(
             by=["Pendapatan_Bulanan", "Jumlah_Anggota_Keluarga", "Usia_Kepala_Keluarga"],
             ascending=[True, False, True]
