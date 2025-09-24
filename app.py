@@ -75,20 +75,104 @@ page = st.sidebar.radio("Pilih Halaman:", ["Dashboard", "Upload & Prediksi", "Da
 # Dashboard
 # ================================
 if page == "Dashboard":
-    st.title("🏠 Dashboard Informasi")
-    st.subheader("Klasifikasi Penerima Bantuan Sosial Desa Cikembar")
-    st.markdown("---")
+    # Judul Utama
+    st.markdown(
+        """
+        <div style='text-align:center; padding:25px; 
+                    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+                    border-radius:15px; color:white;'>
+            <h1>🏠 Dashboard Informasi</h1>
+            <h2 style='margin-top:10px;'>📊 Klasifikasi Penerima Bantuan Sosial di Desa Cikembar</h2>
+        </div>
+        """, unsafe_allow_html=True
+    )
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    st.markdown("""
-    Sistem ini menggunakan **Naive Bayes** untuk mengklasifikasikan warga desa apakah **Layak** atau **Tidak Layak**
-    menerima bantuan sosial.  
+    # Deskripsi Sistem (Card Style)
+    st.markdown(
+        """
+        <div style='padding:20px; background-color:#1E1E2F; color:#EAEAEA; 
+                    border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.4);'>
+            <h4>📌 Sistem Cerdas</h4>
+            <p>
+            Sistem ini menggunakan <b style='color:#4facfe;'>Naive Bayes</b> 
+            untuk mengklasifikasikan warga desa apakah 
+            <span style='color:#00e676;'>✅ Layak</span> atau 
+            <span style='color:#ff5252;'>❌ Tidak Layak</span> 
+            menerima bantuan sosial.
+            </p>
 
-    **Fitur yang digunakan:**
-    - Usia Kepala Keluarga
-    - Pendapatan Bulanan
-    - Jumlah Anggota Keluarga
-    - Kepemilikan Rumah
-    """)
+            <h4>🎯 Tujuan</h4>
+            <ul>
+                <li>Memberikan <b>pendukung keputusan</b> bagi perangkat desa dalam menyalurkan bantuan sosial secara tepat sasaran.</li>
+                <li>Meningkatkan <b>efisiensi</b> dalam proses seleksi penerima bantuan.</li>
+                <li>Mengurangi <b>subjektivitas</b> dan meminimalisir potensi ketidakadilan dalam distribusi bantuan.</li>
+                <li>Memanfaatkan <b>data warga</b> untuk klasifikasi yang lebih akurat.</li>
+            </ul>
+
+            <h4>ℹ️ Keterangan</h4>
+            <p>
+            Data yang digunakan dalam sistem ini mencakup usia kepala keluarga, jumlah anggota keluarga, 
+            pendapatan bulanan, serta kepemilikan rumah.  
+            Dengan fitur-fitur tersebut, sistem dapat memberikan rekomendasi yang lebih obyektif
+            dalam menentukan siapa yang berhak menerima bantuan sosial.
+            </p>
+        </div>
+        """, unsafe_allow_html=True
+    )
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # Bagian Fitur (Responsive Grid)
+    st.markdown("### 🔎 Fitur Utama:")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown(
+            """
+            <div style='padding:15px; background:#2C2C3E; border-radius:10px; 
+                        box-shadow:0 3px 10px rgba(0,0,0,0.3); margin-bottom:10px;'>
+                👤 <b>Usia Kepala Keluarga</b>
+            </div>
+            """, unsafe_allow_html=True
+        )
+        st.markdown(
+            """
+            <div style='padding:15px; background:#2C2C3E; border-radius:10px; 
+                        box-shadow:0 3px 10px rgba(0,0,0,0.3); margin-bottom:10px;'>
+                💰 <b>Pendapatan Bulanan</b>
+            </div>
+            """, unsafe_allow_html=True
+        )
+
+    with col2:
+        st.markdown(
+            """
+            <div style='padding:15px; background:#2C2C3E; border-radius:10px; 
+                        box-shadow:0 3px 10px rgba(0,0,0,0.3); margin-bottom:10px;'>
+                👨‍👩‍👧‍👦 <b>Jumlah Anggota Keluarga</b>
+            </div>
+            """, unsafe_allow_html=True
+        )
+        st.markdown(
+            """
+            <div style='padding:15px; background:#2C2C3E; border-radius:10px; 
+                        box-shadow:0 3px 10px rgba(0,0,0,0.3); margin-bottom:10px;'>
+                🏡 <b>Kepemilikan Rumah</b>
+            </div>
+            """, unsafe_allow_html=True
+        )
+
+    # Footer Note
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div style='text-align:center; padding:10px; font-size:14px; color:gray;'>
+            🚀 Dibangun untuk mendukung <b>keputusan berbasis data</b> di Desa Cikembar
+        </div>
+        """, unsafe_allow_html=True
+    )
 
 # ================================
 # Upload & Prediksi
