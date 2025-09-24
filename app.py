@@ -100,37 +100,46 @@ if page == "Dashboard":
     st.markdown(
         """
         <div style="
-            padding:25px; 
+            padding:30px; 
             background: rgba(255,255,255,0.05); 
-            backdrop-filter: blur(10px);
-            border-radius:15px; 
+            backdrop-filter: blur(12px);
+            border-radius:18px; 
             color:#EAEAEA; 
-            box-shadow:0 6px 15px rgba(0,0,0,0.25);">
-            
-            <h3 style="color:#4facfe;">📌 Tentang Sistem</h3>
-            <p>
-                Sistem ini menggunakan <b style="color:#4facfe;">Naive Bayes</b> 
-                untuk menentukan apakah warga desa 
-                <span style="color:#00e676;">✅ Layak</span> atau 
-                <span style="color:#ff5252;">❌ Tidak Layak</span> 
-                menerima bantuan sosial.
-            </p>
+            box-shadow:0 6px 15px rgba(0,0,0,0.25); 
+            line-height:1.6;
+            font-size:16px;">
+        
+            <div style="margin-bottom:25px;">
+                <h2 style="color:#4facfe; margin-bottom:10px;">📌 Tentang Sistem</h2>
+                <p>
+                    Sistem ini menggunakan <span style="color:#4facfe; font-weight:bold;">Naive Bayes</span> 
+                    untuk menentukan apakah warga desa 
+                    <span style="color:#00e676; font-weight:bold;">✅ Layak</span> atau 
+                    <span style="color:#ff5252; font-weight:bold;">❌ Tidak Layak</span> 
+                    menerima bantuan sosial.
+                </p>
+            </div>
 
-            <h3 style="color:#4facfe;">🎯 Tujuan</h3>
-            <ul>
-                <li>Menjadi <b>alat bantu keputusan</b> perangkat desa agar penyaluran tepat sasaran.</li>
-                <li>Meningkatkan <b>efisiensi & transparansi</b> dalam proses seleksi penerima.</li>
-                <li>Mengurangi <b>subjektivitas</b> serta potensi ketidakadilan.</li>
-                <li>Memanfaatkan <b>data objektif</b> untuk klasifikasi yang akurat.</li>
-            </ul>
+            <div style="margin-bottom:25px;">
+                <h2 style="color:#4facfe; margin-bottom:10px;">🎯 Tujuan</h2>
+                <div style="padding-left:10px;">
+                    ▸ Menjadi <b>alat bantu keputusan</b> perangkat desa agar penyaluran tepat sasaran.<br>
+                    ▸ Meningkatkan <b>efisiensi & transparansi</b> dalam proses seleksi penerima.<br>
+                    ▸ Mengurangi <b>subjektivitas</b> serta potensi ketidakadilan.<br>
+                    ▸ Memanfaatkan <b>data objektif</b> untuk klasifikasi yang akurat.
+                </div>
+            </div>
 
-            <h3 style="color:#4facfe;">ℹ️ Keterangan</h3>
-            <p>
-                Data yang dipakai dalam sistem ini mencakup: usia kepala keluarga, 
-                jumlah anggota keluarga, pendapatan bulanan, serta kepemilikan rumah.  
-                Dengan fitur tersebut, sistem dapat membantu perangkat desa membuat keputusan 
-                yang <b>lebih adil, cepat, dan berbasis data</b>.
-            </p>
+            <div>
+                <h2 style="color:#4facfe; margin-bottom:10px;">ℹ️ Keterangan</h2>
+                <p>
+                    Data yang dipakai dalam sistem ini mencakup <b>usia kepala keluarga</b>, 
+                    <b>jumlah anggota keluarga</b>, <b>pendapatan bulanan</b>, serta <b>kepemilikan rumah</b>.  
+                    Dengan fitur tersebut, sistem dapat membantu perangkat desa membuat keputusan 
+                    yang <b>lebih adil, cepat, dan berbasis data</b>.
+                </p>
+            </div>
+
         </div>
         """, unsafe_allow_html=True
     )
@@ -211,7 +220,6 @@ if page == "Dashboard":
         </div>
         """, unsafe_allow_html=True
     )
-
 
 # ================================
 # Upload & Prediksi
