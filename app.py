@@ -70,7 +70,7 @@ def alasan_bansos_row(row):
 # Sidebar Navigasi
 # ================================
 st.sidebar.title("Navigasi")
-page = st.sidebar.radio("Pilih Halaman:", ["🏠 Dashboard", "🔮 Prediksi Kelayakan", "📊 Prioritas Penerima"])
+page = st.sidebar.radio("Pilih Halaman:", ["🏠 Dashboard", "🔮 Prediksi Kelayakan", "📊 Prioritas Penerima", "🏘️ Profil Desa"])
 
 # ================================
 # Halaman 1: Dashboard
@@ -161,3 +161,45 @@ elif page == "📊 Prioritas Penerima":
         st.download_button("📥 Download Daftar Prioritas", buffer,
                            file_name="prioritas_penerima_bansos.xlsx",
                            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+# ================================
+# Halaman 4: Profil Desa/Kecamatan
+# ================================
+elif page == "🏘️ Profil Desa":
+    st.title("🏘️ Profil Kecamatan Cikembar")
+    st.markdown("---")
+
+    st.subheader("📍 Lokasi & Informasi Umum")
+    st.write("""
+    **Nama Kecamatan**: Kecamatan Cikembar, Kabupaten Sukabumi  
+    **Luas Wilayah**: 8.651,83 Ha (Tanah Sawah: 1.385,38 Ha; Tanah Kering: 5.148,09 Ha) :contentReference[oaicite:1]{index=1}  
+    **Desa/Kelurahan**: Terdiri atas 10 desa.   
+    **Alamat Kantor**: Jalan Pelabuhan II Km 18 Desa Cikembar Kecamatan Cikembar Kabupaten Sukabumi  
+    **Kode Pos**: 43157  
+    """)
+
+    st.subheader("📝 Deskripsi")
+    st.write("""
+    Kecamatan Cikembar memiliki potensi di bidang industri, pertanian, dan perkebunan.   
+    Dengan luas wilayah yang cukup besar dan kombinasi lahan sawah + lahan kering, wilayah ini terus berkembang. :contentReference[oaicite:4]{index=4}  
+    """)
+
+    st.subheader("📷 Galeri Lokasi")
+    st.image([
+        "https://upload.wikimedia.org/wikipedia/commons/…/Cikembar_Sukabumi.jpg",
+        "https://www.sukabumiupdate.com/wp-content/uploads/…/cikembar-sign.jpg",
+        "https://sukabumizone.com/wp-content/uploads/…/peta_cikembar.jpg"
+    ], width=700, caption=["Kantor Kecamatan Cikembar","Pintu Gerbang Cikembar","Peta Wilayah Cikembar"])
+
+    st.subheader("🔗 Tautan Penting")
+    st.write("""
+    - Website resmi Kecamatan Cikembar: https://kec-cikembar.sukabumikab.go.id :contentReference[oaicite:5]{index=5}  
+    - Informasi OPD terkait: https://web.sukabumikab.go.id/web/detail_opd/cikembar.asp :contentReference[oaicite:6]{index=6}  
+    """)
+
+    st.subheader("📌 Catatan Tambahan")
+    st.write("""
+    Data di atas diambil dari sumber resmi dan artikel terkait wilayah Kecamatan Cikembar.  
+    Anda dapat menambahkan bagian potensi ekonomi, demografi, struktur organisasi, atau foto-lapangan lebih lanjut jika diperlukan.
+    """)
+
