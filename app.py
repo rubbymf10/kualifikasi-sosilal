@@ -7,6 +7,7 @@ from streamlit_folium import st_folium
 from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import LabelEncoder
 
+# Konfigurasi halaman (cukup sekali di seluruh app)
 st.set_page_config(page_title="Klasifikasi Bantuan Sosial", layout="wide")
 
 # ================================
@@ -29,7 +30,7 @@ def train_model(df):
     le_target = LabelEncoder()
 
     df["Kepemilikan_Rumah_encoded"] = le_rumah.fit_transform(df["Kepemilikan_Rumah"])
-    df = buat_label_kelayakan(df)  # label otomatis
+    df = buat_label_kelayakan(df)
     df["Status_Kelayakan_encoded"] = le_target.fit_transform(df["Status_Kelayakan"])
 
     X = df[["Usia_Kepala_Keluarga", "Pendapatan_Bulanan",
@@ -114,7 +115,6 @@ elif page == "🔮 Prediksi Kelayakan":
         st.success("✅ Dataset berhasil diupload")
         st.dataframe(df.head())
 
-        # Train model & prediksi
         model, le_rumah, le_target = train_model(df)
         df["Kepemilikan_Rumah_encoded"] = le_rumah.transform(df["Kepemilikan_Rumah"])
         X_all = df[["Usia_Kepala_Keluarga", "Pendapatan_Bulanan",
@@ -124,7 +124,6 @@ elif page == "🔮 Prediksi Kelayakan":
         df["Status_Kelayakan"] = le_target.inverse_transform(y_pred)
         df["Alasan"] = df.apply(alasan_bansos_row, axis=1)
 
-        # Simpan hasil ke session_state
         st.session_state["hasil_prediksi"] = df
 
         st.subheader("📋 Hasil Prediksi")
@@ -148,10 +147,7 @@ elif page == "📊 Prioritas Penerima":
     else:
         df = st.session_state["hasil_prediksi"]
 
-        # Filter hanya penerima layak
         penerima = df[df["Status_Kelayakan"] == "Layak"].copy()
-
-        # Urutkan prioritas (pendapatan rendah, keluarga besar, usia tua)
         penerima = penerima.sort_values(
             by=["Pendapatan_Bulanan", "Jumlah_Anggota_Keluarga", "Usia_Kepala_Keluarga"],
             ascending=[True, False, True]
@@ -171,7 +167,6 @@ elif page == "📊 Prioritas Penerima":
 # Halaman 4: Profil Desa Cikembar
 # ================================
 elif page == "🏡 Profil Desa":
-    st.set_page_config(page_title="Profil Desa Cikembar", layout="centered")
 
     PROFILE = {
         "nama_desa": "Desa Cikembar",
@@ -202,13 +197,13 @@ elif page == "🏡 Profil Desa":
         {"Jabatan": "Kasi Pelayanan", "Nama": "Teti Nuraeni"},
     ]
 
-    # Header & logo
+    # Header & logo Desa
     col_logo, col_title = st.columns([1,3])
     with col_logo:
         st.image(
-            "https://upload.wikimedia.org/wikipedia/commons/6/6a/Emblem_of_Sukabumi_Regency.png",
+            "https://upload.wikimedia.org/wikipedia/commons/6/6a/Lambang_Kab_Sukabumi.svg",
             width=120,
-            caption="Logo Kabupaten Sukabumi"
+            caption="Logo Desa Cikembar"
         )
     with col_title:
         st.title(PROFILE['nama_desa'])
@@ -218,6 +213,7 @@ elif page == "🏡 Profil Desa":
 **Kode Pos:** {PROFILE['kode_pos']}")
         st.write(PROFILE['alamat_kantor_desa'])
 
+    # --- Deskripsi Profil ---
     st.markdown("---")
     st.header("Profil Singkat")
     st.markdown(f"""
@@ -240,6 +236,7 @@ elif page == "🏡 Profil Desa":
     - Perluasan akses layanan publik dan digitalisasi administrasi desa.
     """)
 
+    # --- Peta Desa ---
     st.markdown("---")
     st.header("Peta Desa Cikembar")
     lat, lon = PROFILE['koordinat']
@@ -254,6 +251,7 @@ elif page == "🏡 Profil Desa":
     ).add_to(m)
     st_folium(m, width=700, height=450)
 
+    # --- Struktur Pemerintahan ---
     st.markdown("---")
     st.header("Struktur Pemerintahan Desa")
     df_struktur = pd.DataFrame(STRUKTUR)
@@ -273,5 +271,6 @@ elif page == "🏡 Profil Desa":
     except Exception as e:
         st.warning(f"Gagal menampilkan diagram organisasi: {e}")
 
+    # --- Catatan ---
     st.markdown("---")
     st.caption("Halaman profil ini merupakan bagian dari website resmi Desa Cikembar, Kecamatan Cikembar, Kabupaten Sukabumi. Semua data bersumber dari administrasi desa dan ditampilkan secara online.")
