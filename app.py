@@ -7,11 +7,71 @@ from streamlit_folium import st_folium
 from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import LabelEncoder
 
-# Konfigurasi halaman (cukup sekali di seluruh app)
-st.set_page_config(page_title="Klasifikasi Bantuan Sosial", layout="wide")
+# ================================
+# 🌈 KONFIGURASI HALAMAN
+# ================================
+st.set_page_config(
+    page_title="Klasifikasi Bantuan Sosial",
+    layout="wide",
+    page_icon="📊"
+)
+
+# 🌟 CSS Styling
+st.markdown("""
+<style>
+/* Background gradient */
+.stApp {
+    background: linear-gradient(135deg, #e0f7fa, #fce4ec);
+    font-family: "Poppins", sans-serif;
+}
+
+/* Sidebar */
+.css-1d391kg, .css-1lcbmhc, .css-1v3fvcr {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px);
+}
+
+/* Header */
+h1, h2, h3 {
+    color: #2E86C1 !important;
+    font-weight: 700;
+}
+
+/* Cards */
+div[data-testid="stDataFrame"] {
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    background-color: white;
+}
+
+/* Buttons */
+.stDownloadButton > button, .stButton > button {
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    border-radius: 10px;
+    padding: 0.6em 1.5em;
+    font-weight: bold;
+    border: none;
+    transition: 0.3s;
+}
+.stDownloadButton > button:hover, .stButton > button:hover {
+    transform: scale(1.05);
+}
+
+/* Table styling */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th {
+    background-color: #4facfe !important;
+    color: white !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ================================
-# Fungsi buat label otomatis
+# 🔖 Fungsi Label Otomatis
 # ================================
 def buat_label_kelayakan(df):
     kondisi = (
@@ -23,7 +83,7 @@ def buat_label_kelayakan(df):
     return df
 
 # ================================
-# Fungsi training model
+# 🧠 Fungsi Training Model
 # ================================
 def train_model(df):
     le_rumah = LabelEncoder()
@@ -39,11 +99,10 @@ def train_model(df):
 
     model = GaussianNB()
     model.fit(X, y)
-
     return model, le_rumah, le_target
 
 # ================================
-# Fungsi alasan kelayakan
+# 💬 Fungsi Alasan Bansos
 # ================================
 def alasan_bansos_row(row):
     if row["Status_Kelayakan"] == "Layak":
@@ -70,42 +129,41 @@ def alasan_bansos_row(row):
         return ", ".join(alasan) + " → Tidak Layak menerima bansos."
 
 # ================================
-# Sidebar Navigasi
+# 🧭 Sidebar Navigasi
 # ================================
-st.sidebar.title("Navigasi")
+st.sidebar.markdown("## 🌍 Navigasi")
 page = st.sidebar.radio(
     "Pilih Halaman:",
     ["🏠 Dashboard", "🔮 Prediksi Kelayakan", "📊 Prioritas Penerima", "🏡 Profil Desa"]
 )
 
 # ================================
-# Halaman 1: Dashboard
+# 🏠 Dashboard
 # ================================
 if page == "🏠 Dashboard":
-    st.markdown("<h1 style='text-align:center;color:#4facfe;'>📊 Sistem Klasifikasi Bantuan Sosial</h1>", unsafe_allow_html=True)
-    st.markdown("---")
+    st.markdown("<h1 style='text-align:center;'>📊 Sistem Klasifikasi Bantuan Sosial</h1>", unsafe_allow_html=True)
+    st.markdown("<hr>", unsafe_allow_html=True)
 
-    st.subheader("📌 Tentang Sistem")
-    st.write("""
-    Sistem ini menggunakan **Naive Bayes** dengan label otomatis
-    (berdasarkan pendapatan, jumlah anggota keluarga, dan kepemilikan rumah) untuk menentukan
-    apakah seorang warga **Layak** atau **Tidak Layak** menerima bansos.
-    """)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.image("https://cdn-icons-png.flaticon.com/512/5533/5533914.png", width=250)
+    with col2:
+        st.write("""
+        Sistem ini menggunakan **Naive Bayes Classifier** dengan label otomatis untuk menentukan apakah seorang warga **Layak** atau **Tidak Layak** menerima bantuan sosial.
 
-    st.subheader("🎯 Tujuan")
-    st.write("""
-    - Membantu perangkat desa menyalurkan bansos tepat sasaran  
-    - Mengurangi subjektivitas  
-    - Memanfaatkan data objektif untuk klasifikasi  
-    """)
+        🎯 **Tujuan Utama:**
+        - Membantu perangkat desa menyalurkan bansos **tepat sasaran**  
+        - Mengurangi **subjektivitas keputusan**  
+        - Memanfaatkan data **objektif dan transparan**
+        """)
 
 # ================================
-# Halaman 2: Prediksi Kelayakan
+# 🔮 Prediksi Kelayakan
 # ================================
 elif page == "🔮 Prediksi Kelayakan":
     st.title("🔮 Prediksi Kelayakan Penerima Bansos")
+    uploaded_file = st.file_uploader("📂 Upload dataset penduduk (Excel/CSV)", type=["csv", "xlsx"], key="prediksi")
 
-    uploaded_file = st.file_uploader("Upload dataset penduduk (Excel/CSV)", type=["csv", "xlsx"], key="prediksi")
     if uploaded_file:
         if uploaded_file.name.endswith("csv"):
             df = pd.read_csv(uploaded_file)
@@ -117,13 +175,11 @@ elif page == "🔮 Prediksi Kelayakan":
 
         model, le_rumah, le_target = train_model(df)
         df["Kepemilikan_Rumah_encoded"] = le_rumah.transform(df["Kepemilikan_Rumah"])
-        X_all = df[["Usia_Kepala_Keluarga", "Pendapatan_Bulanan",
-                    "Jumlah_Anggota_Keluarga", "Kepemilikan_Rumah_encoded"]]
+        X_all = df[["Usia_Kepala_Keluarga", "Pendapatan_Bulanan", "Jumlah_Anggota_Keluarga", "Kepemilikan_Rumah_encoded"]]
 
         y_pred = model.predict(X_all)
         df["Status_Kelayakan"] = le_target.inverse_transform(y_pred)
         df["Alasan"] = df.apply(alasan_bansos_row, axis=1)
-
         st.session_state["hasil_prediksi"] = df
 
         st.subheader("📋 Hasil Prediksi")
@@ -132,21 +188,17 @@ elif page == "🔮 Prediksi Kelayakan":
         buffer = io.BytesIO()
         df.to_excel(buffer, index=False, engine="openpyxl")
         buffer.seek(0)
-        st.download_button("📥 Download Hasil Prediksi", buffer,
-                           file_name="hasil_prediksi_bansos.xlsx",
-                           mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        st.download_button("📥 Download Hasil Prediksi", buffer, file_name="hasil_prediksi_bansos.xlsx")
 
 # ================================
-# Halaman 3: Prioritas Penerima
+# 📊 Prioritas Penerima
 # ================================
 elif page == "📊 Prioritas Penerima":
     st.title("📊 Urutan Prioritas Penerima Bansos")
-
     if "hasil_prediksi" not in st.session_state:
         st.warning("⚠️ Belum ada hasil prediksi. Silakan lakukan prediksi terlebih dahulu di halaman **Prediksi Kelayakan**.")
     else:
         df = st.session_state["hasil_prediksi"]
-
         penerima = df[df["Status_Kelayakan"] == "Layak"].copy()
         penerima = penerima.sort_values(
             by=["Pendapatan_Bulanan", "Jumlah_Anggota_Keluarga", "Usia_Kepala_Keluarga"],
@@ -159,117 +211,42 @@ elif page == "📊 Prioritas Penerima":
         buffer = io.BytesIO()
         penerima.to_excel(buffer, index=False, engine="openpyxl")
         buffer.seek(0)
-        st.download_button("📥 Download Daftar Prioritas", buffer,
-                           file_name="prioritas_penerima_bansos.xlsx",
-                           mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        st.download_button("📥 Download Daftar Prioritas", buffer, file_name="prioritas_penerima_bansos.xlsx")
 
 # ================================
-# Halaman 4: Profil Desa Cikembar
+# 🏡 Profil Desa
 # ================================
 elif page == "🏡 Profil Desa":
-
-    PROFILE = {
-        "nama_desa": "Desa Cikembar",
-        "kecamatan": "Cikembar",
-        "kabupaten": "Sukabumi",
-        "provinsi": "Jawa Barat",
-        "kode_pos": "43157",
-        "alamat_kantor_desa": "Jl. Pelabuhan II KM 18, Desa Cikembar",
-        "koordinat": [-6.9393, 106.9153],
-        "luas_sawah_ha": 1385.38,
-        "luas_lahan_kering_ha": 5148.09,
-        "suhu_min": 18,
-        "suhu_max": 32,
-        "curah_hujan_min": 1200,
-        "curah_hujan_max": 2200,
-        "jumlah_dusun": 44,
-        "jumlah_rw": 103,
-        "jumlah_rt": 438
-    }
-
-    STRUKTUR = [
-        {"Jabatan": "Kepala Desa", "Nama": "Andi Rahmat Sanjaya, A.Md"},
-        {"Jabatan": "Sekretaris Desa", "Nama": "Dian Purnama"},
-        {"Jabatan": "Kaur Keuangan", "Nama": "Nining Sulastri"},
-        {"Jabatan": "Kaur Umum", "Nama": "Ade Rohman"},
-        {"Jabatan": "Kasi Pemerintahan", "Nama": "Iwan Setiawan"},
-        {"Jabatan": "Kasi Kesejahteraan", "Nama": "Dede Komarudin"},
-        {"Jabatan": "Kasi Pelayanan", "Nama": "Teti Nuraeni"},
-    ]
-
-    # Header & logo Desa
-    col_logo, col_title = st.columns([1,3])
+    st.title("🏡 Profil Desa Cikembar")
+    col_logo, col_title = st.columns([1, 3])
     with col_logo:
-        st.image(
-            "https://upload.wikimedia.org/wikipedia/commons/6/6a/Lambang_Kab_Sukabumi.svg",
-            width=120,
-        )
+        st.image("https://upload.wikimedia.org/wikipedia/commons/6/6a/Lambang_Kab_Sukabumi.svg", width=120)
     with col_title:
-        st.title(PROFILE['nama_desa'])
-        st.markdown(f"**Kecamatan:** {PROFILE['kecamatan']}  \
-**Kabupaten:** {PROFILE['kabupaten']}  \
-**Provinsi:** {PROFILE['provinsi']}  \
-**Kode Pos:** {PROFILE['kode_pos']}")
-        st.write(PROFILE['alamat_kantor_desa'])
+        st.markdown("""
+        **Desa Cikembar**, Kecamatan Cikembar, Kabupaten Sukabumi, Provinsi Jawa Barat.  
+        Kode Pos: **43157**  
+        Alamat: *Jl. Pelabuhan II KM 18, Desa Cikembar*
+        """)
 
-    # --- Deskripsi Profil ---
     st.markdown("---")
-    st.header("Profil Singkat")
-    st.markdown(f"""
-    **Desa Cikembar** merupakan salah satu dari 10 desa di Kecamatan Cikembar, Kabupaten Sukabumi, Provinsi Jawa Barat. 
-    Desa ini terletak strategis di jalur **Jl. Pelabuhan II KM 18**, yang menghubungkan pusat Kabupaten Sukabumi dengan kawasan Pelabuhanratu di pesisir selatan.
-
-    Desa Cikembar memiliki lahan sawah seluas **{PROFILE['luas_sawah_ha']} hektare** dan lahan kering **{PROFILE['luas_lahan_kering_ha']} hektare**. 
-    Kondisi iklim relatif sejuk, dengan suhu antara **{PROFILE['suhu_min']}°C – {PROFILE['suhu_max']}°C** dan curah hujan tahunan sekitar **{PROFILE['curah_hujan_min']} – {PROFILE['curah_hujan_max']} mm**.
-
-    Jumlah wilayah administratif terdiri atas **{PROFILE['jumlah_dusun']} dusun**, **{PROFILE['jumlah_rw']} RW**, dan **{PROFILE['jumlah_rt']} RT**.
-
-    ### Potensi Desa
-    - **Pertanian & Perkebunan:** Lahan sawah dan kebun produktif untuk padi serta hortikultura.
-    - **Perindustrian & Logistik:** Lokasi strategis di jalur Pelabuhan II membuka peluang industri ringan dan distribusi.
-    - **Sosial & Budaya:** Warga aktif dalam gotong royong, kegiatan kemasyarakatan, dan pembangunan infrastruktur.
-
-    ### Tantangan & Pengembangan
-    - Risiko **banjir lokal dan longsor** di musim hujan.
-    - Peningkatan kualitas jalan lingkungan dan drainase.
-    - Perluasan akses layanan publik dan digitalisasi administrasi desa.
+    st.markdown("""
+    🌾 **Potensi Desa:**  
+    - Pertanian & perkebunan produktif  
+    - Industri ringan dan logistik  
+    - Warga aktif dan gotong royong  
+    
+    ⚠️ **Tantangan:**  
+    - Banjir lokal & longsor  
+    - Peningkatan kualitas jalan  
+    - Digitalisasi administrasi publik
     """)
 
-    # --- Peta Desa ---
     st.markdown("---")
-    st.header("Peta Desa Cikembar")
-    lat, lon = PROFILE['koordinat']
+    st.header("🗺️ Peta Lokasi Desa")
+    lat, lon = -6.9393, 106.9153
     tiles_url = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
-    attr = '&copy; <a href="https://carto.com/attributions">CartoDB</a> contributors'
-    m = folium.Map(location=[lat, lon], zoom_start=13, tiles=tiles_url, attr=attr)
-    folium.Marker(
-        [lat, lon],
-        popup="Kantor Desa Cikembar",
-        tooltip="Kantor Desa Cikembar",
-        icon=folium.Icon(color='green', icon='info-sign')
-    ).add_to(m)
+    m = folium.Map(location=[lat, lon], zoom_start=13, tiles=tiles_url)
+    folium.Marker([lat, lon], popup="Kantor Desa Cikembar", tooltip="Kantor Desa Cikembar", icon=folium.Icon(color='green', icon='home')).add_to(m)
     st_folium(m, width=700, height=450)
 
-    # --- Struktur Pemerintahan ---
-    st.markdown("---")
-    st.header("Struktur Pemerintahan Desa")
-    df_struktur = pd.DataFrame(STRUKTUR)
-    st.table(df_struktur)
-
-    try:
-        graph_lines = ['digraph {', 'node [shape=box, style=filled, fillcolor=lightyellow];']
-        graph_lines.append('"Kepala Desa\\nSUHENDAR"')
-        graph_lines.append('"Kepala Desa\\nSUHENDAR" -> "Sekretaris Desa\\nAndi Rahmat Sanjaya, A.Md";')
-        for r in STRUKTUR[2:]:
-            jab = r['Jabatan']
-            nama = r['Nama']
-            graph_lines.append(f'"Sekretaris Desa\\nAndi Rahmat Sanjaya, A.Md" -> "{jab}\\n{nama}";')
-        graph_lines.append('}')
-        graph = '\n'.join(graph_lines)
-        st.graphviz_chart(graph)
-    except Exception as e:
-        st.warning(f"Gagal menampilkan diagram organisasi: {e}")
-
-    # --- Catatan ---
-    st.markdown("---")
-    st.caption("Halaman profil ini merupakan bagian dari website resmi Desa Cikembar, Kecamatan Cikembar, Kabupaten Sukabumi. Semua data bersumber dari administrasi desa dan ditampilkan secara online.")
+    st.caption("Halaman profil resmi Desa Cikembar © 2025")
