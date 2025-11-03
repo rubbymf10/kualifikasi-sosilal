@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import joblib
 import io
 import folium
 from streamlit_folium import st_folium
@@ -12,65 +11,83 @@ from sklearn.preprocessing import LabelEncoder
 # ================================
 st.set_page_config(page_title="Klasifikasi Bantuan Sosial", layout="wide")
 
-# CSS Custom agar tampil modern
+# CSS Desain Modern & Kontras Tinggi
 st.markdown("""
 <style>
-/* Font & Warna */
-html, body, [class*="css"]  {
+html, body, [class*="css"] {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #f0f9ff, #cbebff, #e3f2fd);
-}
-h1, h2, h3, h4 {
-    color: #0072ff;
-    text-shadow: 1px 1px 2px #b3e5fc;
+    background: linear-gradient(135deg, #e8f0fe 0%, #f9fbff 100%);
+    color: #1c1c1c;
 }
 
-/* Sidebar styling */
+/* Sidebar */
 [data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #0072ff 10%, #4facfe 100%);
+    background: linear-gradient(180deg, #004aad 0%, #007bff 100%);
     color: white;
 }
 [data-testid="stSidebar"] h1, [data-testid="stSidebar"] label, [data-testid="stSidebar"] span {
     color: white !important;
 }
 
-/* Card effect */
-div[data-testid="stVerticalBlock"] > div {
-    background: #ffffffcc;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0px 3px 15px rgba(0,0,0,0.1);
+/* Judul dan teks utama */
+h1, h2, h3 {
+    color: #004aad !important;
+}
+hr {
+    border: 1px solid #e0e0e0;
+    margin-top: 15px;
     margin-bottom: 15px;
 }
 
-/* Button */
+/* Card konten */
+.block-container {
+    padding-top: 2rem;
+}
+div[data-testid="stVerticalBlock"] > div {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 10px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+/* Tombol */
 div.stButton > button:first-child {
-    background: linear-gradient(90deg, #4facfe, #00f2fe);
+    background: linear-gradient(90deg, #007bff, #0056d6);
     color: white;
     font-weight: 600;
     border: none;
     border-radius: 10px;
-    transition: all 0.3s ease-in-out;
+    padding: 10px 25px;
+    transition: all 0.2s ease-in-out;
 }
 div.stButton > button:first-child:hover {
+    background: linear-gradient(90deg, #0056d6, #007bff);
     transform: scale(1.03);
-    background: linear-gradient(90deg, #00f2fe, #4facfe);
 }
 
 /* Table */
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
 thead tr th {
-    background-color: #0072ff !important;
+    background-color: #004aad !important;
     color: white !important;
+}
+
+/* Metric box */
+[data-testid="stMetricValue"] {
+    color: #004aad;
+    font-weight: 700;
+}
+
+/* Info box */
+div[data-testid="stAlert"] {
+    background-color: #f0f6ff !important;
+    color: #003b73 !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
 # ================================
-# Fungsi buat label otomatis
+# Fungsi pembuat label otomatis
 # ================================
 def buat_label_kelayakan(df):
     kondisi = (
@@ -82,7 +99,7 @@ def buat_label_kelayakan(df):
     return df
 
 # ================================
-# Fungsi training model
+# Fungsi model
 # ================================
 def train_model(df):
     le_rumah = LabelEncoder()
@@ -101,7 +118,7 @@ def train_model(df):
     return model, le_rumah, le_target
 
 # ================================
-# Fungsi alasan kelayakan
+# Fungsi alasan bansos
 # ================================
 def alasan_bansos_row(row):
     if row["Status_Kelayakan"] == "Layak":
@@ -126,7 +143,7 @@ def alasan_bansos_row(row):
 # ================================
 # Sidebar Navigasi
 # ================================
-st.sidebar.title("🚀 Navigasi Utama")
+st.sidebar.title("📚 Navigasi")
 page = st.sidebar.radio(
     "Pilih Halaman:",
     ["🏠 Dashboard", "🔮 Prediksi Kelayakan", "📊 Prioritas Penerima", "🏡 Profil Desa"]
@@ -139,24 +156,26 @@ if page == "🏠 Dashboard":
     st.markdown("<h1 style='text-align:center;'>📊 Sistem Klasifikasi Bantuan Sosial</h1>", unsafe_allow_html=True)
     st.image("https://cdn-icons-png.flaticon.com/512/3141/3141158.png", width=120)
     st.markdown("---")
-    st.info("💡 **Sistem ini membantu perangkat desa menentukan kelayakan bantuan sosial secara objektif dan cepat.**")
+
+    st.info("💡 Sistem ini membantu perangkat desa menentukan kelayakan penerima bantuan sosial berdasarkan data objektif dengan algoritma *Naive Bayes*.")
+
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("🧍 Jumlah Penduduk", "12,580")
+        st.metric("👨‍👩‍👧 Jumlah Penduduk", "12,580")
     with col2:
-        st.metric("🏠 Rumah Tangga", "3,420")
+        st.metric("🏘️ Rumah Tangga", "3,420")
     with col3:
-        st.metric("🎯 Target Bansos", "870 Keluarga")
+        st.metric("🎯 Target Penerima", "870 Keluarga")
 
-    st.subheader("✨ Tujuan Aplikasi")
+    st.subheader("🎯 Tujuan Sistem")
     st.write("""
-    - 🎯 Menyalurkan bansos **tepat sasaran**
-    - ⚖️ Mengurangi **subjektivitas** keputusan
-    - 🧮 Berdasarkan **data objektif & algoritma Naive Bayes**
+    - Menentukan penerima bansos secara **objektif dan adil**  
+    - Membantu desa menyalurkan **bantuan tepat sasaran**  
+    - Menggunakan **data pendapatan, tanggungan, dan kepemilikan rumah**
     """)
 
 # ================================
-# Halaman Prediksi Kelayakan
+# Halaman Prediksi
 # ================================
 elif page == "🔮 Prediksi Kelayakan":
     st.title("🔮 Prediksi Kelayakan Penerima Bansos")
@@ -178,12 +197,12 @@ elif page == "🔮 Prediksi Kelayakan":
 
         st.subheader("📋 Hasil Prediksi")
         st.dataframe(df[["Nama", "Status_Kelayakan", "Alasan"]])
+
         buffer = io.BytesIO()
         df.to_excel(buffer, index=False, engine="openpyxl")
         buffer.seek(0)
         st.download_button("📥 Download Hasil Prediksi", buffer,
-                           file_name="hasil_prediksi_bansos.xlsx",
-                           mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                           file_name="hasil_prediksi_bansos.xlsx")
 
 # ================================
 # Halaman Prioritas
@@ -207,7 +226,7 @@ elif page == "📊 Prioritas Penerima":
                            file_name="prioritas_penerima_bansos.xlsx")
 
 # ================================
-# Halaman Profil Desa
+# Halaman Profil
 # ================================
 elif page == "🏡 Profil Desa":
     st.title("🏡 Profil Desa Cikembar")
