@@ -203,7 +203,6 @@ elif page == "🏡 Profil Desa":
         st.image(
             "https://upload.wikimedia.org/wikipedia/commons/6/6a/Lambang_Kab_Sukabumi.svg",
             width=120,
-            caption="Logo Desa Cikembar"
         )
     with col_title:
         st.title(PROFILE['nama_desa'])
@@ -259,12 +258,12 @@ elif page == "🏡 Profil Desa":
 
     try:
         graph_lines = ['digraph {', 'node [shape=box, style=filled, fillcolor=lightyellow];']
-        graph_lines.append('"Kepala Desa\\nAndi Rahmat Sanjaya, A.Md"')
-        graph_lines.append('"Kepala Desa\\nAndi Rahmat Sanjaya, A.Md" -> "Sekretaris Desa\\nDian Purnama";')
+        graph_lines.append('"Kepala Desa\\nAndi SUHENDAR"')
+        graph_lines.append('"Kepala Desa\\nAndi SUHENDAR" -> "Sekretaris Desa\\nAndi Rahmat Sanjaya, A.Md";')
         for r in STRUKTUR[2:]:
             jab = r['Jabatan']
             nama = r['Nama']
-            graph_lines.append(f'"Sekretaris Desa\\nDian Purnama" -> "{jab}\\n{nama}";')
+            graph_lines.append(f'"Sekretaris Desa\\nAndi Rahmat Sanjaya, A.Md" -> "{jab}\\n{nama}";')
         graph_lines.append('}')
         graph = '\n'.join(graph_lines)
         st.graphviz_chart(graph)
