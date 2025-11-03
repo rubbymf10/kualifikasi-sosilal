@@ -258,8 +258,8 @@ elif page == "🏡 Profil Desa":
 
     try:
         graph_lines = ['digraph {', 'node [shape=box, style=filled, fillcolor=lightyellow];']
-        graph_lines.append('"Kepala Desa\\nAndi SUHENDAR"')
-        graph_lines.append('"Kepala Desa\\nAndi SUHENDAR" -> "Sekretaris Desa\\nAndi Rahmat Sanjaya, A.Md";')
+        graph_lines.append('"Kepala Desa\\nSUHENDAR"')
+        graph_lines.append('"Kepala Desa\\nSUHENDAR" -> "Sekretaris Desa\\nAndi Rahmat Sanjaya, A.Md";')
         for r in STRUKTUR[2:]:
             jab = r['Jabatan']
             nama = r['Nama']
