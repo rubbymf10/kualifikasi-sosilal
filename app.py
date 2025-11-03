@@ -153,7 +153,7 @@ elif page == "📊 Prioritas Penerima":
         )
 
         st.subheader("📋 Daftar Prioritas Penerima")
-        st.dataframe(penerima[["Nama", "Pendapatan_Bulanan", "Jumlah_Anggota_Keluarga", "Usia_Kepala_Keluarga", "Alasan"]])
+        st.dataframe(penerima[["Nama", "Pendapatan_Bulanan", "Jumlah_Anggota_Keluarga", "Usia_Kepala_Kepala_Keluarga", "Alasan"]])
 
         buffer = io.BytesIO()
         penerima.to_excel(buffer, index=False, engine="openpyxl")
@@ -176,22 +176,22 @@ elif page == "🏘️ Profil Desa":
     **Desa/Kelurahan**: Terdiri atas 10 desa.  
     **Alamat Kantor**: Jalan Pelabuhan II Km 18 Desa Cikembar Kecamatan Cikembar Kabupaten Sukabumi  
     **Kode Pos**: 43157  
-    Sumber: [web.sukabumikab.go.id](https://web.sukabumikab.go.id/web/detail_opd/cikembar.asp)  
+    Sumber: [web.sukabumikab.go.id](https://web.sukabumikab.go.id/web/detail_opd/cikembar.asp)
     """)
 
     st.subheader("📝 Deskripsi")
     st.write("""
     Kecamatan Cikembar memiliki potensi di bidang industri, pertanian, dan perkebunan. Dengan luas wilayah yang cukup besar dan kombinasi lahan sawah + lahan kering, wilayah ini terus berkembang.  
-    Sumber: [web.sukabumikab.go.id](https://web.sukabumikab.go.id/web/detail_opd/cikembar.asp)  
+    Sumber: [web.sukabumikab.go.id](https://web.sukabumikab.go.id/web/detail_opd/cikembar.asp)
     """)
 
     st.subheader("📷 Galeri Kegiatan")
-    st.write("Galeri kegiatan dan dokumentasi publik yang diambil dari sumber online terkait Kecamatan Cikembar / Desa-sekitarnya.")
+    st.write("Galeri kegiatan dan dokumentasi publik dari Kecamatan Cikembar / Desa-sekitarnya.")
     st.image([
-        "https://sukabumizone.com/2023/01/24/pemdes-cikembar-prioritaskan-pembangunan-di-2023/IMG_…jpg",
+        "https://sukabumizone.com/2025/08/25/ragam-kegiatan-meriahkan-hut-ri-ke-80-di-desa-cikembar/.jpg",  
         "https://www.beritaekspos.com/2024/02/ratusan-siswa-sekolah-dasar-di-kecamatan-cikembar-mengikuti-lomba/…jpg",
-        "https://www.radarjabar.com/jawa-barat/95110273828/ratusan-warga-cikembar-sukabumi-gelar-salat-istisqa-minta-diturunkan-hujan-dan-perlindungan-dari-bencana/…jpg"
-    ], width=700, caption=["Pembangunan Desa Cikembar","Lomba Pentas PAI Kecamatan Cikembar","Salat Istisqa Warga Cikembar"])
+        "https://www.radarjabar.com/jawa-barat/95110273828/ratusan-warga-cikembar-sukabumi-gelar-salat-istisqa-minta-diturunkan-hujan-dan-perlindungan-dari-bencana/.jpg"
+    ], width=700, caption=["HUT RI ke-80 Desa Cikembar","Pentas PAI Kecamatan Cikembar","Salat Istisqa Warga Cikembar"])
 
     st.subheader("🔗 Tautan Penting")
     st.write("""
@@ -202,6 +202,6 @@ elif page == "🏘️ Profil Desa":
     st.subheader("📌 Catatan Tambahan")
     st.write("""
     Data dan gambar di atas bersifat publik dan diambil dari sumber online. Untuk penggunaan resmi lebih lanjut, disarankan memastikan hak cipta dan lisensi masing-gambar.  
-    Anda juga dapat menambahkan bagian potensi ekonomi, demografi, struktur organisasi, atau foto-lapangan lebih lengkap.  
+    Anda juga dapat menambahkan bagian potensi ekonomi, demografi, struktur organisasi, atau foto-lapangan lebih lengkap jika diperlukan.
     """)
 
