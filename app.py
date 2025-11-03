@@ -172,34 +172,36 @@ elif page == "🏘️ Profil Desa":
     st.subheader("📍 Lokasi & Informasi Umum")
     st.write("""
     **Nama Kecamatan**: Kecamatan Cikembar, Kabupaten Sukabumi  
-    **Luas Wilayah**: 8.651,83 Ha (Tanah Sawah: 1.385,38 Ha; Tanah Kering: 5.148,09 Ha) :contentReference[oaicite:1]{index=1}  
-    **Desa/Kelurahan**: Terdiri atas 10 desa.   
+    **Luas Wilayah**: 8.651,83 Ha (Tanah Sawah: 1.385,38 Ha; Tanah Kering: 5.148,09 Ha)  
+    **Desa/Kelurahan**: Terdiri atas 10 desa.  
     **Alamat Kantor**: Jalan Pelabuhan II Km 18 Desa Cikembar Kecamatan Cikembar Kabupaten Sukabumi  
     **Kode Pos**: 43157  
+    Sumber: [web.sukabumikab.go.id](https://web.sukabumikab.go.id/web/detail_opd/cikembar.asp)  
     """)
 
     st.subheader("📝 Deskripsi")
     st.write("""
-    Kecamatan Cikembar memiliki potensi di bidang industri, pertanian, dan perkebunan.   
-    Dengan luas wilayah yang cukup besar dan kombinasi lahan sawah + lahan kering, wilayah ini terus berkembang. :contentReference[oaicite:4]{index=4}  
+    Kecamatan Cikembar memiliki potensi di bidang industri, pertanian, dan perkebunan. Dengan luas wilayah yang cukup besar dan kombinasi lahan sawah + lahan kering, wilayah ini terus berkembang.  
+    Sumber: [web.sukabumikab.go.id](https://web.sukabumikab.go.id/web/detail_opd/cikembar.asp)  
     """)
 
-    st.subheader("📷 Galeri Lokasi")
+    st.subheader("📷 Galeri Kegiatan")
+    st.write("Galeri kegiatan dan dokumentasi publik yang diambil dari sumber online terkait Kecamatan Cikembar / Desa-sekitarnya.")
     st.image([
-        "https://upload.wikimedia.org/wikipedia/commons/…/Cikembar_Sukabumi.jpg",
-        "https://www.sukabumiupdate.com/wp-content/uploads/…/cikembar-sign.jpg",
-        "https://sukabumizone.com/wp-content/uploads/…/peta_cikembar.jpg"
-    ], width=700, caption=["Kantor Kecamatan Cikembar","Pintu Gerbang Cikembar","Peta Wilayah Cikembar"])
+        "https://sukabumizone.com/2023/01/24/pemdes-cikembar-prioritaskan-pembangunan-di-2023/IMG_…jpg",
+        "https://www.beritaekspos.com/2024/02/ratusan-siswa-sekolah-dasar-di-kecamatan-cikembar-mengikuti-lomba/…jpg",
+        "https://www.radarjabar.com/jawa-barat/95110273828/ratusan-warga-cikembar-sukabumi-gelar-salat-istisqa-minta-diturunkan-hujan-dan-perlindungan-dari-bencana/…jpg"
+    ], width=700, caption=["Pembangunan Desa Cikembar","Lomba Pentas PAI Kecamatan Cikembar","Salat Istisqa Warga Cikembar"])
 
     st.subheader("🔗 Tautan Penting")
     st.write("""
-    - Website resmi Kecamatan Cikembar: https://kec-cikembar.sukabumikab.go.id :contentReference[oaicite:5]{index=5}  
-    - Informasi OPD terkait: https://web.sukabumikab.go.id/web/detail_opd/cikembar.asp :contentReference[oaicite:6]{index=6}  
+    - Website resmi Kecamatan Cikembar: https://kec-cikembar.sukabumikab.go.id/album  
+    - Informasi OPD terkait: https://web.sukabumikab.go.id/web/detail_opd/cikembar.asp  
     """)
 
     st.subheader("📌 Catatan Tambahan")
     st.write("""
-    Data di atas diambil dari sumber resmi dan artikel terkait wilayah Kecamatan Cikembar.  
-    Anda dapat menambahkan bagian potensi ekonomi, demografi, struktur organisasi, atau foto-lapangan lebih lanjut jika diperlukan.
+    Data dan gambar di atas bersifat publik dan diambil dari sumber online. Untuk penggunaan resmi lebih lanjut, disarankan memastikan hak cipta dan lisensi masing-gambar.  
+    Anda juga dapat menambahkan bagian potensi ekonomi, demografi, struktur organisasi, atau foto-lapangan lebih lengkap.  
     """)
 
