@@ -206,7 +206,7 @@ st.sidebar.title("🧭 Navigasi")
 st.sidebar.markdown("---")
 page = st.sidebar.radio(
     "Pilih Halaman:",
-    ["🏠 Dashboard", "🔮 Prediksi Kelayakan", "📊 Prioritas Penerima", "🏡 Profil Desa"],
+    ["🏠 Dashboard", "🔮 Prediksi Kelayakan", "📊 Prioritas Penerima"],
     index=0,
     help="Pilih halaman yang ingin Anda kunjungi."
 )
@@ -348,40 +348,3 @@ elif page == "📊 Prioritas Penerima":
                            file_name="prioritas_penerima_bansos.xlsx",
                            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     st.markdown('</div>', unsafe_allow_html=True)
-
-# ================================
-# Halaman 4: Profil Desa Cikembar
-# ================================
-elif page == "🏡 Profil Desa":
-    st.markdown('<div class="fade-up">', unsafe_allow_html=True)
-
-    PROFILE = {
-        "nama_desa": "Desa Cikembar",
-        "kecamatan": "Cikembar",
-        "kabupaten": "Sukabumi",
-        "provinsi": "Jawa Barat",
-        "kode_pos": "43157",
-        "alamat_kantor_desa": "Jl. Pelabuhan II KM 18, Desa Cikembar",
-        "koordinat": [-6.9393, 106.9153],
-        "luas_sawah_ha": 1385.38,
-        "luas_lahan_kering_ha": 5148.09,
-        "suhu_min": 18,
-        "suhu_max": 32,
-        "curah_hujan_min": 1200,
-        "curah_hujan_max": 2200,
-        "jumlah_dusun": 44,
-        "jumlah_rw": 103,
-        "jumlah_rt": 438
-    }
-
-    STRUKTUR = [
-        {"Jabatan": "Kepala Desa", "Nama": "Andi Rahmat Sanjaya, A.Md"},
-        {"Jabatan": "Sekretaris Desa", "Nama": "Dian Purnama"},
-        {"Jabatan": "Kaur Keuangan", "Nama": "Nining Sulastri"},
-        {"Jabatan": "Kaur Umum", "Nama": "Ade Rohman"},
-        {"Jabatan": "Kasi Pemerintahan", "Nama": "Iwan Setiawan"},
-        {"Jabatan": "Kasi Kesejahteraan", "Nama": "Dede Komarudin"},
-        {"Jabatan": "Kasi Pelayanan", "Nama": "Teti Nuraeni"},
-    ]
-
-    # Header & logo Desa dengan layout yang lebih menarik
