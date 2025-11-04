@@ -72,39 +72,85 @@ def alasan_bansos_row(row):
 # ================================
 # Sidebar Navigasi
 # ================================
-st.sidebar.title("Navigasi")
+st.sidebar.title("🧭 Navigasi")
+st.sidebar.markdown("---")
 page = st.sidebar.radio(
     "Pilih Halaman:",
-    ["🏠 Dashboard", "🔮 Prediksi Kelayakan", "📊 Prioritas Penerima", "🏡 Profil Desa"]
+    ["🏠 Dashboard", "🔮 Prediksi Kelayakan", "📊 Prioritas Penerima", "🏡 Profil Desa"],
+    index=0,
+    help="Pilih halaman yang ingin Anda kunjungi."
 )
+st.sidebar.markdown("---")
+st.sidebar.info("💡 Sistem ini membantu klasifikasi bantuan sosial dengan AI.")
 
 # ================================
 # Halaman 1: Dashboard
 # ================================
 if page == "🏠 Dashboard":
-    st.markdown("<h1 style='text-align:center;color:#4facfe;'>📊 Sistem Klasifikasi Bantuan Sosial</h1>", unsafe_allow_html=True)
+    # Header dengan gradient background
+    st.markdown("""
+    <style>
+    .dashboard-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        text-align: center;
+        font-size: 2.5em;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    </style>
+    <div class="dashboard-header">📊 Sistem Klasifikasi Bantuan Sosial</div>
+    """, unsafe_allow_html=True)
+    
+    # Layout dengan kolom
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.subheader("📌 Tentang Sistem")
+        st.write("""
+        Sistem ini menggunakan **Naive Bayes** dengan label otomatis
+        (berdasarkan pendapatan, jumlah anggota keluarga, dan kepemilikan rumah) untuk menentukan
+        apakah seorang warga **Layak** atau **Tidak Layak** menerima bansos.
+        """)
+        st.markdown("### 🚀 Fitur Utama")
+        st.markdown("- 🔍 Prediksi Kelayakan Berdasarkan Data")
+        st.markdown("- 📈 Prioritas Penerima Bansos")
+        st.markdown("- 🏘️ Profil Desa Lengkap")
+    with col2:
+        st.image("https://via.placeholder.com/300x200/4facfe/ffffff?text=Sistem+Bansos", use_column_width=True)
+        st.caption("Ilustrasi Sistem Klasifikasi")
+
     st.markdown("---")
-
-    st.subheader("📌 Tentang Sistem")
-    st.write("""
-    Sistem ini menggunakan **Naive Bayes** dengan label otomatis
-    (berdasarkan pendapatan, jumlah anggota keluarga, dan kepemilikan rumah) untuk menentukan
-    apakah seorang warga **Layak** atau **Tidak Layak** menerima bansos.
-    """)
-
     st.subheader("🎯 Tujuan")
     st.write("""
     - Membantu perangkat desa menyalurkan bansos tepat sasaran  
     - Mengurangi subjektivitas  
     - Memanfaatkan data objektif untuk klasifikasi  
     """)
+    # Tambahkan card-like untuk tujuan
+    st.markdown("""
+    <div style="background-color: #f0f8ff; padding: 15px; border-radius: 8px; border-left: 5px solid #4facfe;">
+    <h4>💡 Mengapa Penting?</h4>
+    <p>Dengan AI, proses klasifikasi menjadi lebih akurat dan efisien, memastikan bantuan sampai ke yang benar-benar membutuhkan.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ================================
 # Halaman 2: Prediksi Kelayakan
 # ================================
 elif page == "🔮 Prediksi Kelayakan":
     st.title("🔮 Prediksi Kelayakan Penerima Bansos")
-
+    st.markdown("---")
+    
+    # Upload section dengan styling
+    st.markdown("""
+    <div style="background-color: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+    <h4>📤 Upload Dataset</h4>
+    <p>Upload file Excel atau CSV berisi data penduduk untuk prediksi kelayakan.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     uploaded_file = st.file_uploader("Upload dataset penduduk (Excel/CSV)", type=["csv", "xlsx"], key="prediksi")
     if uploaded_file:
         if uploaded_file.name.endswith("csv"):
@@ -113,7 +159,7 @@ elif page == "🔮 Prediksi Kelayakan":
             df = pd.read_excel(uploaded_file)
 
         st.success("✅ Dataset berhasil diupload")
-        st.dataframe(df.head())
+        st.dataframe(df.head(), use_container_width=True)
 
         model, le_rumah, le_target = train_model(df)
         df["Kepemilikan_Rumah_encoded"] = le_rumah.transform(df["Kepemilikan_Rumah"])
@@ -127,7 +173,15 @@ elif page == "🔮 Prediksi Kelayakan":
         st.session_state["hasil_prediksi"] = df
 
         st.subheader("📋 Hasil Prediksi")
-        st.dataframe(df[["Nama", "Status_Kelayakan", "Alasan"]])
+        # Tambahkan filter untuk hasil
+        status_filter = st.selectbox("Filter berdasarkan Status:", ["Semua", "Layak", "Tidak Layak"])
+        if status_filter == "Layak":
+            filtered_df = df[df["Status_Kelayakan"] == "Layak"]
+        elif status_filter == "Tidak Layak":
+            filtered_df = df[df["Status_Kelayakan"] == "Tidak Layak"]
+        else:
+            filtered_df = df
+        st.dataframe(filtered_df[["Nama", "Status_Kelayakan", "Alasan"]], use_container_width=True)
 
         buffer = io.BytesIO()
         df.to_excel(buffer, index=False, engine="openpyxl")
@@ -141,9 +195,11 @@ elif page == "🔮 Prediksi Kelayakan":
 # ================================
 elif page == "📊 Prioritas Penerima":
     st.title("📊 Urutan Prioritas Penerima Bansos")
-
+    st.markdown("---")
+    
     if "hasil_prediksi" not in st.session_state:
         st.warning("⚠️ Belum ada hasil prediksi. Silakan lakukan prediksi terlebih dahulu di halaman **Prediksi Kelayakan**.")
+        st.info("🔄 Navigasi ke halaman Prediksi untuk memulai.")
     else:
         df = st.session_state["hasil_prediksi"]
 
@@ -154,7 +210,10 @@ elif page == "📊 Prioritas Penerima":
         )
 
         st.subheader("📋 Daftar Prioritas Penerima")
-        st.dataframe(penerima[["Nama", "Pendapatan_Bulanan", "Jumlah_Anggota_Keluarga", "Usia_Kepala_Keluarga", "Alasan"]])
+        # Tambahkan expander untuk detail
+        with st.expander("🔍 Lihat Kriteria Prioritas"):
+            st.write("Prioritas ditentukan berdasarkan: Pendapatan terendah, jumlah anggota keluarga terbanyak, usia kepala keluarga termuda.")
+        st.dataframe(penerima[["Nama", "Pendapatan_Bulanan", "Jumlah_Anggota_Keluarga", "Usia_Kepala_Keluarga", "Alasan"]], use_container_width=True)
 
         buffer = io.BytesIO()
         penerima.to_excel(buffer, index=False, engine="openpyxl")
@@ -197,7 +256,7 @@ elif page == "🏡 Profil Desa":
         {"Jabatan": "Kasi Pelayanan", "Nama": "Teti Nuraeni"},
     ]
 
-    # Header & logo Desa
+    # Header & logo Desa dengan layout yang lebih menarik
     col_logo, col_title = st.columns([1,3])
     with col_logo:
         st.image(
@@ -214,7 +273,7 @@ elif page == "🏡 Profil Desa":
 
     # --- Deskripsi Profil ---
     st.markdown("---")
-    st.header("Profil Singkat")
+    st.header("📖 Profil Singkat")
     st.markdown(f"""
     **Desa Cikembar** merupakan salah satu dari 10 desa di Kecamatan Cikembar, Kabupaten Sukabumi, Provinsi Jawa Barat. 
     Desa ini terletak strategis di jalur **Jl. Pelabuhan II KM 18**, yang menghubungkan pusat Kabupaten Sukabumi dengan kawasan Pelabuhanratu di pesisir selatan.
@@ -224,12 +283,12 @@ elif page == "🏡 Profil Desa":
 
     Jumlah wilayah administratif terdiri atas **{PROFILE['jumlah_dusun']} dusun**, **{PROFILE['jumlah_rw']} RW**, dan **{PROFILE['jumlah_rt']} RT**.
 
-    ### Potensi Desa
+    ### 🌱 Potensi Desa
     - **Pertanian & Perkebunan:** Lahan sawah dan kebun produktif untuk padi serta hortikultura.
     - **Perindustrian & Logistik:** Lokasi strategis di jalur Pelabuhan II membuka peluang industri ringan dan distribusi.
     - **Sosial & Budaya:** Warga aktif dalam gotong royong, kegiatan kemasyarakatan, dan pembangunan infrastruktur.
 
-    ### Tantangan & Pengembangan
+    ### ⚠️ Tantangan & Pengembangan
     - Risiko **banjir lokal dan longsor** di musim hujan.
     - Peningkatan kualitas jalan lingkungan dan drainase.
     - Perluasan akses layanan publik dan digitalisasi administrasi desa.
@@ -237,7 +296,7 @@ elif page == "🏡 Profil Desa":
 
     # --- Peta Desa ---
     st.markdown("---")
-    st.header("Peta Desa Cikembar")
+    st.header("🗺️ Peta Desa Cikembar")
     lat, lon = PROFILE['koordinat']
     tiles_url = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
     attr = '&copy; <a href="https://carto.com/attributions">CartoDB</a> contributors'
@@ -252,7 +311,7 @@ elif page == "🏡 Profil Desa":
 
     # --- Struktur Pemerintahan ---
     st.markdown("---")
-    st.header("Struktur Pemerintahan Desa")
+    st.header("🏛️ Struktur Pemerintahan Desa")
     df_struktur = pd.DataFrame(STRUKTUR)
     st.table(df_struktur)
 
