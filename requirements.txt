@@ -1,5 +1,7 @@
 streamlit
+pandas
+scikit-learn
 folium
 streamlit-folium
-pandas
-graphviz
+openpyxl
+joblib
