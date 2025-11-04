@@ -10,6 +10,71 @@ from sklearn.preprocessing import LabelEncoder
 # Konfigurasi halaman (cukup sekali di seluruh app)
 st.set_page_config(page_title="Klasifikasi Bantuan Sosial", layout="wide")
 
+# CSS untuk styling dan animasi
+st.markdown("""
+<style>
+body {
+    background-color: #ffffff;
+    color: #333333;
+    font-family: 'Arial', sans-serif;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+    animation: fadeIn 1s ease-in-out;
+}
+.dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    animation: fadeIn 1.5s ease-in-out;
+}
+.card {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+.sidebar .stRadio > div {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 10px;
+}
+.stButton > button {
+    background-color: #4facfe;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
+}
+.stButton > button:hover {
+    background-color: #00a8ff;
+}
+.stDataFrame {
+    border-radius: 8px;
+    overflow: hidden;
+}
+.stTable {
+    border-radius: 8px;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ================================
 # Fungsi buat label otomatis
 # ================================
@@ -87,26 +152,15 @@ st.sidebar.info("💡 Sistem ini membantu klasifikasi bantuan sosial dengan AI."
 # Halaman 1: Dashboard
 # ================================
 if page == "🏠 Dashboard":
-    # Header dengan gradient background
+    # Header dengan gradient background dan animasi
     st.markdown("""
-    <style>
-    .dashboard-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 20px;
-        border-radius: 10px;
-        color: white;
-        text-align: center;
-        font-size: 2.5em;
-        font-weight: bold;
-        margin-bottom: 20px;
-    }
-    </style>
-    <div class="dashboard-header">📊 Sistem Klasifikasi Bantuan Sosial</div>
+    <div class="dashboard-header fade-in">📊 Sistem Klasifikasi Bantuan Sosial</div>
     """, unsafe_allow_html=True)
     
-    # Layout dengan kolom
+    # Layout dengan kolom dan animasi
     col1, col2 = st.columns([2, 1])
     with col1:
+        st.markdown('<div class="card fade-in">', unsafe_allow_html=True)
         st.subheader("📌 Tentang Sistem")
         st.write("""
         Sistem ini menggunakan **Naive Bayes** dengan label otomatis
@@ -117,35 +171,40 @@ if page == "🏠 Dashboard":
         st.markdown("- 🔍 Prediksi Kelayakan Berdasarkan Data")
         st.markdown("- 📈 Prioritas Penerima Bansos")
         st.markdown("- 🏘️ Profil Desa Lengkap")
+        st.markdown('</div>', unsafe_allow_html=True)
     with col2:
+        st.markdown('<div class="card fade-in">', unsafe_allow_html=True)
         st.image("https://via.placeholder.com/300x200/4facfe/ffffff?text=Sistem+Bansos", use_column_width=True)
         st.caption("Ilustrasi Sistem Klasifikasi")
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("---")
+    st.markdown('<div class="card fade-in">', unsafe_allow_html=True)
     st.subheader("🎯 Tujuan")
     st.write("""
     - Membantu perangkat desa menyalurkan bansos tepat sasaran  
     - Mengurangi subjektivitas  
     - Memanfaatkan data objektif untuk klasifikasi  
     """)
-    # Tambahkan card-like untuk tujuan
     st.markdown("""
-    <div style="background-color: #f0f8ff; padding: 15px; border-radius: 8px; border-left: 5px solid #4facfe;">
+    <div style="background-color: #e8f5e8; padding: 15px; border-radius: 8px; border-left: 5px solid #4facfe; animation: fadeIn 1s ease-in-out;">
     <h4>💡 Mengapa Penting?</h4>
     <p>Dengan AI, proses klasifikasi menjadi lebih akurat dan efisien, memastikan bantuan sampai ke yang benar-benar membutuhkan.</p>
     </div>
     """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ================================
 # Halaman 2: Prediksi Kelayakan
 # ================================
 elif page == "🔮 Prediksi Kelayakan":
+    st.markdown('<div class="fade-in">', unsafe_allow_html=True)
     st.title("🔮 Prediksi Kelayakan Penerima Bansos")
     st.markdown("---")
     
-    # Upload section dengan styling
+    # Upload section dengan styling dan animasi
     st.markdown("""
-    <div style="background-color: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+    <div class="card fade-in" style="background-color: #e8f5e8;">
     <h4>📤 Upload Dataset</h4>
     <p>Upload file Excel atau CSV berisi data penduduk untuk prediksi kelayakan.</p>
     </div>
@@ -189,11 +248,13 @@ elif page == "🔮 Prediksi Kelayakan":
         st.download_button("📥 Download Hasil Prediksi", buffer,
                            file_name="hasil_prediksi_bansos.xlsx",
                            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ================================
 # Halaman 3: Prioritas Penerima
 # ================================
 elif page == "📊 Prioritas Penerima":
+    st.markdown('<div class="fade-in">', unsafe_allow_html=True)
     st.title("📊 Urutan Prioritas Penerima Bansos")
     st.markdown("---")
     
@@ -220,12 +281,14 @@ elif page == "📊 Prioritas Penerima":
         buffer.seek(0)
         st.download_button("📥 Download Daftar Prioritas", buffer,
                            file_name="prioritas_penerima_bansos.xlsx",
-                           mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                           mime="application/vnd.open.xmlformats-officedocument.spreadsheetml.sheet")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ================================
 # Halaman 4: Profil Desa Cikembar
 # ================================
 elif page == "🏡 Profil Desa":
+    st.markdown('<div class="fade-in">', unsafe_allow_html=True)
 
     PROFILE = {
         "nama_desa": "Desa Cikembar",
@@ -303,32 +366,4 @@ elif page == "🏡 Profil Desa":
     m = folium.Map(location=[lat, lon], zoom_start=13, tiles=tiles_url, attr=attr)
     folium.Marker(
         [lat, lon],
-        popup="Kantor Desa Cikembar",
-        tooltip="Kantor Desa Cikembar",
-        icon=folium.Icon(color='green', icon='info-sign')
-    ).add_to(m)
-    st_folium(m, width=700, height=450)
-
-    # --- Struktur Pemerintahan ---
-    st.markdown("---")
-    st.header("🏛️ Struktur Pemerintahan Desa")
-    df_struktur = pd.DataFrame(STRUKTUR)
-    st.table(df_struktur)
-
-    try:
-        graph_lines = ['digraph {', 'node [shape=box, style=filled, fillcolor=lightyellow];']
-        graph_lines.append('"Kepala Desa\\nSUHENDAR"')
-        graph_lines.append('"Kepala Desa\\nSUHENDAR" -> "Sekretaris Desa\\nAndi Rahmat Sanjaya, A.Md";')
-        for r in STRUKTUR[2:]:
-            jab = r['Jabatan']
-            nama = r['Nama']
-            graph_lines.append(f'"Sekretaris Desa\\nAndi Rahmat Sanjaya, A.Md" -> "{jab}\\n{nama}";')
-        graph_lines.append('}')
-        graph = '\n'.join(graph_lines)
-        st.graphviz_chart(graph)
-    except Exception as e:
-        st.warning(f"Gagal menampilkan diagram organisasi: {e}")
-
-    # --- Catatan ---
-    st.markdown("---")
-    st.caption("Halaman profil ini merupakan bagian dari website resmi Desa Cikembar, Kecamatan Cikembar, Kabupaten Sukabumi. Semua data bersumber dari administrasi desa dan ditampilkan secara online.")
+        popup="Kantor Desa Cikembar
