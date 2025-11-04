@@ -10,67 +10,116 @@ from sklearn.preprocessing import LabelEncoder
 # Konfigurasi halaman (cukup sekali di seluruh app)
 st.set_page_config(page_title="Klasifikasi Bantuan Sosial", layout="wide")
 
-# CSS untuk styling dan animasi
+# CSS untuk styling dan animasi yang lebih menarik
 st.markdown("""
 <style>
 body {
-    background-color: #ffffff;
-    color: #333333;
-    font-family: 'Arial', sans-serif;
+    background-color: #ffffff !important;
+    color: #333333 !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
 }
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.05); }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); opacity: 1; }
+}
+@keyframes slideInLeft {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
-.fade-in {
-    animation: fadeIn 1s ease-in-out;
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+.bounce-in {
+    animation: bounceIn 1s ease-out;
+}
+.slide-left {
+    animation: slideInLeft 1s ease-out;
+}
+.slide-right {
+    animation: slideInRight 1s ease-out;
+}
+.fade-up {
+    animation: fadeInUp 1s ease-out;
+}
+.pulse {
+    animation: pulse 2s infinite;
 }
 .dashboard-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 20px;
-    border-radius: 10px;
-    color: white;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+    padding: 30px;
+    border-radius: 15px;
+    color: #333333;
     text-align: center;
-    font-size: 2.5em;
+    font-size: 3em;
     font-weight: bold;
-    margin-bottom: 20px;
-    animation: fadeIn 1.5s ease-in-out;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    animation: bounceIn 1.5s ease-out;
 }
 .card {
-    background-color: #f9f9f9;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    padding: 15px;
-    margin: 10px 0;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    transition: all 0.4s ease;
+    color: #333333;
 }
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    transform: translateY(-10px) rotate(1deg);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg, #c3cfe2 0%, #f5f7fa 100%);
 }
 .sidebar .stRadio > div {
-    background-color: #f0f0f0;
-    border-radius: 8px;
-    padding: 10px;
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    border-radius: 10px;
+    padding: 15px;
+    color: #333333;
 }
 .stButton > button {
-    background-color: #4facfe;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    transition: background-color 0.3s ease;
+    border-radius: 10px;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 .stButton > button:hover {
-    background-color: #00a8ff;
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
 }
-.stDataFrame {
-    border-radius: 8px;
+.stDataFrame, .stTable {
+    border-radius: 10px;
     overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
-.stTable {
-    border-radius: 8px;
+.stSuccess, .stWarning, .stInfo {
+    border-radius: 10px;
+    padding: 15px;
+    color: #333333;
+}
+.stExpander {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 </style>
 """, unsafe_allow_html=True)
@@ -152,15 +201,15 @@ st.sidebar.info("💡 Sistem ini membantu klasifikasi bantuan sosial dengan AI."
 # Halaman 1: Dashboard
 # ================================
 if page == "🏠 Dashboard":
-    # Header dengan gradient background dan animasi
+    # Header dengan gradient background dan animasi bounce
     st.markdown("""
-    <div class="dashboard-header fade-in">📊 Sistem Klasifikasi Bantuan Sosial</div>
+    <div class="dashboard-header">📊 Sistem Klasifikasi Bantuan Sosial</div>
     """, unsafe_allow_html=True)
     
-    # Layout dengan kolom dan animasi
+    # Layout dengan kolom dan animasi slide
     col1, col2 = st.columns([2, 1])
     with col1:
-        st.markdown('<div class="card fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="card slide-left">', unsafe_allow_html=True)
         st.subheader("📌 Tentang Sistem")
         st.write("""
         Sistem ini menggunakan **Naive Bayes** dengan label otomatis
@@ -173,13 +222,13 @@ if page == "🏠 Dashboard":
         st.markdown("- 🏘️ Profil Desa Lengkap")
         st.markdown('</div>', unsafe_allow_html=True)
     with col2:
-        st.markdown('<div class="card fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="card slide-right pulse">', unsafe_allow_html=True)
         st.image("https://via.placeholder.com/300x200/4facfe/ffffff?text=Sistem+Bansos", use_column_width=True)
         st.caption("Ilustrasi Sistem Klasifikasi")
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("---")
-    st.markdown('<div class="card fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="card fade-up">', unsafe_allow_html=True)
     st.subheader("🎯 Tujuan")
     st.write("""
     - Membantu perangkat desa menyalurkan bansos tepat sasaran  
@@ -187,7 +236,7 @@ if page == "🏠 Dashboard":
     - Memanfaatkan data objektif untuk klasifikasi  
     """)
     st.markdown("""
-    <div style="background-color: #e8f5e8; padding: 15px; border-radius: 8px; border-left: 5px solid #4facfe; animation: fadeIn 1s ease-in-out;">
+    <div style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); padding: 20px; border-radius: 10px; border-left: 5px solid #667eea; animation: fadeInUp 1s ease-out;">
     <h4>💡 Mengapa Penting?</h4>
     <p>Dengan AI, proses klasifikasi menjadi lebih akurat dan efisien, memastikan bantuan sampai ke yang benar-benar membutuhkan.</p>
     </div>
@@ -198,13 +247,13 @@ if page == "🏠 Dashboard":
 # Halaman 2: Prediksi Kelayakan
 # ================================
 elif page == "🔮 Prediksi Kelayakan":
-    st.markdown('<div class="fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="fade-up">', unsafe_allow_html=True)
     st.title("🔮 Prediksi Kelayakan Penerima Bansos")
     st.markdown("---")
     
     # Upload section dengan styling dan animasi
     st.markdown("""
-    <div class="card fade-in" style="background-color: #e8f5e8;">
+    <div class="card slide-left" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
     <h4>📤 Upload Dataset</h4>
     <p>Upload file Excel atau CSV berisi data penduduk untuk prediksi kelayakan.</p>
     </div>
@@ -254,7 +303,7 @@ elif page == "🔮 Prediksi Kelayakan":
 # Halaman 3: Prioritas Penerima
 # ================================
 elif page == "📊 Prioritas Penerima":
-    st.markdown('<div class="fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="fade-up">', unsafe_allow_html=True)
     st.title("📊 Urutan Prioritas Penerima Bansos")
     st.markdown("---")
     
@@ -281,14 +330,14 @@ elif page == "📊 Prioritas Penerima":
         buffer.seek(0)
         st.download_button("📥 Download Daftar Prioritas", buffer,
                            file_name="prioritas_penerima_bansos.xlsx",
-                           mime="application/vnd.open.xmlformats-officedocument.spreadsheetml.sheet")
+                           mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ================================
 # Halaman 4: Profil Desa Cikembar
 # ================================
 elif page == "🏡 Profil Desa":
-    st.markdown('<div class="fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="fade-up">', unsafe_allow_html=True)
 
     PROFILE = {
         "nama_desa": "Desa Cikembar",
@@ -322,48 +371,15 @@ elif page == "🏡 Profil Desa":
     # Header & logo Desa dengan layout yang lebih menarik
     col_logo, col_title = st.columns([1,3])
     with col_logo:
+        st.markdown('<div class="card slide-left">', unsafe_allow_html=True)
         st.image(
             "https://upload.wikimedia.org/wikipedia/commons/6/6a/Lambang_Kab_Sukabumi.svg",
             width=120,
         )
+        st.markdown('</div>', unsafe_allow_html=True)
     with col_title:
+        st.markdown('<div class="card slide-right">', unsafe_allow_html=True)
         st.title(PROFILE['nama_desa'])
         st.markdown(f"**Kecamatan:** {PROFILE['kecamatan']}  \
 **Kabupaten:** {PROFILE['kabupaten']}  \
-**Provinsi:** {PROFILE['provinsi']}  \
-**Kode Pos:** {PROFILE['kode_pos']}")
-        st.write(PROFILE['alamat_kantor_desa'])
-
-    # --- Deskripsi Profil ---
-    st.markdown("---")
-    st.header("📖 Profil Singkat")
-    st.markdown(f"""
-    **Desa Cikembar** merupakan salah satu dari 10 desa di Kecamatan Cikembar, Kabupaten Sukabumi, Provinsi Jawa Barat. 
-    Desa ini terletak strategis di jalur **Jl. Pelabuhan II KM 18**, yang menghubungkan pusat Kabupaten Sukabumi dengan kawasan Pelabuhanratu di pesisir selatan.
-
-    Desa Cikembar memiliki lahan sawah seluas **{PROFILE['luas_sawah_ha']} hektare** dan lahan kering **{PROFILE['luas_lahan_kering_ha']} hektare**. 
-    Kondisi iklim relatif sejuk, dengan suhu antara **{PROFILE['suhu_min']}°C – {PROFILE['suhu_max']}°C** dan curah hujan tahunan sekitar **{PROFILE['curah_hujan_min']} – {PROFILE['curah_hujan_max']} mm**.
-
-    Jumlah wilayah administratif terdiri atas **{PROFILE['jumlah_dusun']} dusun**, **{PROFILE['jumlah_rw']} RW**, dan **{PROFILE['jumlah_rt']} RT**.
-
-    ### 🌱 Potensi Desa
-    - **Pertanian & Perkebunan:** Lahan sawah dan kebun produktif untuk padi serta hortikultura.
-    - **Perindustrian & Logistik:** Lokasi strategis di jalur Pelabuhan II membuka peluang industri ringan dan distribusi.
-    - **Sosial & Budaya:** Warga aktif dalam gotong royong, kegiatan kemasyarakatan, dan pembangunan infrastruktur.
-
-    ### ⚠️ Tantangan & Pengembangan
-    - Risiko **banjir lokal dan longsor** di musim hujan.
-    - Peningkatan kualitas jalan lingkungan dan drainase.
-    - Perluasan akses layanan publik dan digitalisasi administrasi desa.
-    """)
-
-    # --- Peta Desa ---
-    st.markdown("---")
-    st.header("🗺️ Peta Desa Cikembar")
-    lat, lon = PROFILE['koordinat']
-    tiles_url = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
-    attr = '&copy; <a href="https://carto.com/attributions">CartoDB</a> contributors'
-    m = folium.Map(location=[lat, lon], zoom_start=13, tiles=tiles_url, attr=attr)
-    folium.Marker(
-        [lat, lon],
-        popup="Kantor Desa Cikembar
+**Provinsi:** {PROFILE
