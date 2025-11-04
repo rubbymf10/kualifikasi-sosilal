@@ -43,6 +43,15 @@ body {
     50% { transform: scale(1.05); }
     100% { transform: scale(1); }
 }
+@keyframes wiggle {
+    0%, 7% { transform: rotateZ(0); }
+    15% { transform: rotateZ(-15deg); }
+    20% { transform: rotateZ(10deg); }
+    25% { transform: rotateZ(-10deg); }
+    30% { transform: rotateZ(6deg); }
+    35% { transform: rotateZ(-4deg); }
+    40%, 100% { transform: rotateZ(0); }
+}
 .bounce-in {
     animation: bounceIn 1s ease-out;
 }
@@ -57,6 +66,9 @@ body {
 }
 .pulse {
     animation: pulse 2s infinite;
+}
+.wiggle {
+    animation: wiggle 2s ease-in-out infinite;
 }
 .dashboard-header {
     background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
@@ -120,6 +132,10 @@ body {
 .stExpander {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.icon-bounce {
+    display: inline-block;
+    animation: wiggle 2s ease-in-out infinite;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -203,7 +219,7 @@ st.sidebar.info("💡 Sistem ini membantu klasifikasi bantuan sosial dengan AI."
 if page == "🏠 Dashboard":
     # Header dengan gradient background dan animasi bounce
     st.markdown("""
-    <div class="dashboard-header">📊 Sistem Klasifikasi Bantuan Sosial</div>
+    <div class="dashboard-header">📊 <span class="icon-bounce">Sistem Klasifikasi Bantuan Sosial</span></div>
     """, unsafe_allow_html=True)
     
     # Layout dengan kolom dan animasi slide
@@ -369,17 +385,3 @@ elif page == "🏡 Profil Desa":
     ]
 
     # Header & logo Desa dengan layout yang lebih menarik
-    col_logo, col_title = st.columns([1,3])
-    with col_logo:
-        st.markdown('<div class="card slide-left">', unsafe_allow_html=True)
-        st.image(
-            "https://upload.wikimedia.org/wikipedia/commons/6/6a/Lambang_Kab_Sukabumi.svg",
-            width=120,
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
-    with col_title:
-        st.markdown('<div class="card slide-right">', unsafe_allow_html=True)
-        st.title(PROFILE['nama_desa'])
-        st.markdown(f"**Kecamatan:** {PROFILE['kecamatan']}  \
-**Kabupaten:** {PROFILE['kabupaten']}  \
-**Provinsi:** {PROFILE
